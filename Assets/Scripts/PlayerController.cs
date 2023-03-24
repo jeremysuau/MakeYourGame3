@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 9.81f;
 	public float mass = 10;
 	public float velocityY;
-	private float velocityDeltaY;
 	private float cooldownGrounded = 0.1f;
 
 	private Transform cam;
@@ -45,7 +44,6 @@ public class PlayerController : MonoBehaviour
 		Mouvement();
 
 		charController.Move(transform.up * velocityY * Time.deltaTime);
-		velocityDeltaY = velocityY;
 	}
 	//application de la gravité
 	public void Fall()
@@ -58,11 +56,6 @@ public class PlayerController : MonoBehaviour
 		{
 			Debug.Log("fall");
 			velocityY -= gravity * mass * Time.deltaTime;
-		}
-		
-		if (velocityY < velocityDeltaY)
-		{
-			animManager.SetAnimatorToFall();
 		}
 	}
 
@@ -107,7 +100,7 @@ public class PlayerController : MonoBehaviour
 			Debug.Log("jump");
 			velocityY = jumpForce;
 		}
-		if( velocityY > velocityDeltaY)
+		if( velocityY > 0.1f)
 		{
 			animManager.SetAnimatorToJump();
 		}
