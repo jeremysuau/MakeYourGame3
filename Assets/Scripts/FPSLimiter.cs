@@ -6,6 +6,6 @@ public class FPSLimiter : MonoBehaviour
 {
 	private void Start()
 	{
-		QualitySettings.vSyncCount = 1;
+		Application.targetFrameRate = 120;
 	}
 }
