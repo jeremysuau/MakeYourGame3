@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class AnimatorManager : MonoBehaviour
 {
     public Animator playerAnimator;
-    public AnimatorController animRun;
-    public AnimatorController animJump;
-    public AnimatorController animIdle;
-    public AnimatorController animFall;
+    public RuntimeAnimatorController animRun;
+    public RuntimeAnimatorController animJump;
+    public RuntimeAnimatorController animIdle;
+    public RuntimeAnimatorController animFall;
 
     public void SetAnimatorToRun()
 	{
