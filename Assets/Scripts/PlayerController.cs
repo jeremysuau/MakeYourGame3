@@ -1,58 +1,41 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
 	private PlayerInputs playerInputs;
-	private CharacterController charController;
-	private AnimatorManager animManager;
+	private Rigidbody rb;
+	private CapsuleCollider capsuleCollider;
 
-	[Header ("Gameplay")]
 	public float speedMouvement;
 	public float jumpForce;
-
-	[Header("Constants")]
-	public float gravity = 9.81f;
-	public float mass = 10;
-	public float velocityY;
-	private float cooldownGrounded = 0.1f;
+	public bool grounded;
 
 	private Transform cam;
 	private float turnSmoothVelocity;
 	private float turnSmoothtime = 0.1f;
-	public bool grounded;
+	private float distToGround;
 
 	private void Awake()
 	{
 		cam = Camera.main.transform;
 		playerInputs = GetComponent<PlayerInputs>();
-		charController = GetComponent<CharacterController>();
-		animManager = GetComponent<AnimatorManager>();
+		rb = GetComponent<Rigidbody>();
+		capsuleCollider = GetComponent<CapsuleCollider>();
+	}
+
+	private void Start()
+	{
+		distToGround = capsuleCollider.bounds.extents.y;
 	}
 
 	private void Update()
 	{
 		IsGrounded();
 
-		Fall();
-
 		Jump();
 
 		Mouvement();
-
-		charController.Move(transform.up * velocityY * Time.deltaTime);
-	}
-	//application de la gravité
-	public void Fall()
-	{
-		if (grounded)
-		{
-			velocityY = -1;
-		}
-		else
-		{
-			Debug.Log("fall");
-			velocityY -= gravity * mass * Time.deltaTime;
-		}
 	}
 
 	//gestion des mouvement lateraux du joueur
@@ -62,28 +45,19 @@ public class PlayerController : MonoBehaviour
 		float inputX = playerInputs.inputX;
 		float inputY = playerInputs.inputY;
 
-		//deplace le joueur a l'aide du nouvel input system
+		//defini la direction de deplacement grace aux inputs
 		Vector3 direction = new Vector3(inputX, 0f, inputY).normalized;
+
 		if (direction.magnitude >= 0.1f)
 		{
-			if (grounded)
-			{
-				animManager.SetAnimatorToRun();
-			}
 			//oriente correctement le joueur suivant son deplacement
 			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
 			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothtime);
 			transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
 			Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-			charController.Move(moveDir * speedMouvement * Time.deltaTime);
-		}
-		else
-		{
-			if (grounded)
-			{
-				animManager.SetAnimatorToIdle();
-			}
+
+			//applique le mouvement
+			rb.velocity = new Vector3(moveDir.x * speedMouvement, rb.velocity.y, moveDir.z * speedMouvement);
 		}
 	}
 
@@ -94,36 +68,15 @@ public class PlayerController : MonoBehaviour
 		if (playerInputs.inputJump == true && grounded)
 		{
 			Debug.Log("jump");
-			velocityY = jumpForce;
+			rb.AddForce(transform.up * jumpForce,ForceMode.Impulse);
 		}
-		if( velocityY > 0.1f)
-		{
-			animManager.SetAnimatorToJump();
-		}
+
 	}
 
 	//check si le joueur est au sol ou non
 	public void IsGrounded()
 	{
-		//utilise le CharacterController pour check la collision avec le sol
-		/*
-		if(charController.isGrounded)
-		{
-			cooldownGrounded = 0.1f;
-		}
-		else
-		{ 
-			cooldownGrounded -= Time.deltaTime;
-		}
-		*/
-		if(charController.isGrounded)
-		{
-			grounded = true;
-		}
-		else
-		{
-			grounded = false;
-		}
-		
+		grounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * 0.1f);
+		Debug.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * 0.1f);
 	}
 } 

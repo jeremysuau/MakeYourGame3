@@ -3,37 +3,12 @@ using UnityEngine;
 public class AnimatorManager : MonoBehaviour
 {
     public Animator playerAnimator;
-    public RuntimeAnimatorController animRun;
-    public RuntimeAnimatorController animJump;
-    public RuntimeAnimatorController animIdle;
-    public RuntimeAnimatorController animFall;
+    public PlayerInputs playerInputs;
+    public PlayerController playerController;
 
-    public void SetAnimatorToRun()
+	private void Update()
 	{
-        if(playerAnimator.runtimeAnimatorController != animRun)
-        {
-			playerAnimator.runtimeAnimatorController = animRun;
-		}
-	}
-    public void SetAnimatorToJump()
-    {
-		if (playerAnimator.runtimeAnimatorController != animJump)
-		{
-			playerAnimator.runtimeAnimatorController = animJump;
-		}
-	}
-    public void SetAnimatorToFall()
-    {
-		if (playerAnimator.runtimeAnimatorController != animFall)
-		{
-			playerAnimator.runtimeAnimatorController = animFall;
-		}
-	}
-	public void SetAnimatorToIdle()
-    {
-		if (playerAnimator.runtimeAnimatorController != animIdle)
-		{
-			playerAnimator.runtimeAnimatorController = animIdle;
-		}
+		playerAnimator.SetFloat("Speed", Mathf.Abs(playerInputs.inputX) + Mathf.Abs(playerInputs.inputY));
+		playerAnimator.SetBool("Grounded", playerController.grounded);
 	}
 }
