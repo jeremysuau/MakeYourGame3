@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 	private Transform cam;
 	private float turnSmoothVelocity;
 	private float turnSmoothtime = 0.1f;
-	public LayerMask ground;
+	public LayerMask groundedLayerMask;
 
 	private void Awake()
 	{
@@ -73,20 +73,17 @@ public class PlayerController : MonoBehaviour
 		{
 			rb.AddForce(transform.up * jumpForce,ForceMode.Impulse);
 		}
-
 	}
 
 	//check si le joueur est au sol ou non
 	public void IsGrounded()
 	{
-		RaycastHit hit;
-		grounded = Physics.SphereCast(transform.position, 0.1f, Vector3.down, out hit);
-		
+		grounded = Physics.CheckSphere(transform.position, 0.1f, groundedLayerMask);
 	}
 
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.red;
-		Gizmos.DrawSphere(transform.position, 0.25f);
+		Gizmos.DrawSphere(transform.position, 0.1f);  
 	}
 } 
