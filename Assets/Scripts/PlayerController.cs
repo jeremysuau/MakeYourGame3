@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,7 +15,7 @@ public class PlayerController : MonoBehaviour
 	private Transform cam;
 	private float turnSmoothVelocity;
 	private float turnSmoothtime = 0.1f;
-	private float distToGround;
+	public LayerMask ground;
 
 	private void Awake()
 	{
@@ -24,15 +25,13 @@ public class PlayerController : MonoBehaviour
 		capsuleCollider = GetComponent<CapsuleCollider>();
 	}
 
-	private void Start()
+	private void FixedUpdate()
 	{
-		distToGround = capsuleCollider.bounds.extents.y;
+		IsGrounded();
 	}
 
 	private void Update()
 	{
-		IsGrounded();
-
 		Jump();
 
 		Mouvement();
@@ -59,6 +58,11 @@ public class PlayerController : MonoBehaviour
 			//applique le mouvement
 			rb.velocity = new Vector3(moveDir.x * speedMouvement, rb.velocity.y, moveDir.z * speedMouvement);
 		}
+		else
+		{
+			//frein
+			rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+		}
 	}
 
 	//systeme de saut
@@ -67,7 +71,6 @@ public class PlayerController : MonoBehaviour
 		//verifie l'input et le fait qu'on soit au sol
 		if (playerInputs.inputJump == true && grounded)
 		{
-			Debug.Log("jump");
 			rb.AddForce(transform.up * jumpForce,ForceMode.Impulse);
 		}
 
@@ -76,7 +79,14 @@ public class PlayerController : MonoBehaviour
 	//check si le joueur est au sol ou non
 	public void IsGrounded()
 	{
-		grounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * 0.1f);
-		Debug.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * 0.1f);
+		RaycastHit hit;
+		grounded = Physics.SphereCast(transform.position, 0.1f, Vector3.down, out hit);
+		
+	}
+
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawSphere(transform.position, 0.25f);
 	}
 } 
