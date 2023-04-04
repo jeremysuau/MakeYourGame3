@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,7 +5,7 @@ public class PlayerController : MonoBehaviour
 {
 	private PlayerInputs playerInputs;
 	private Rigidbody rb;
-	private CapsuleCollider capsuleCollider;
+	private Footstep footstep;
 
 	public float speedMouvement;
 	public float jumpForce;
@@ -22,7 +21,7 @@ public class PlayerController : MonoBehaviour
 		cam = Camera.main.transform;
 		playerInputs = GetComponent<PlayerInputs>();
 		rb = GetComponent<Rigidbody>();
-		capsuleCollider = GetComponent<CapsuleCollider>();
+		footstep = GetComponent<Footstep>();
 	}
 
 	private void FixedUpdate()
