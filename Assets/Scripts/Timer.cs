@@ -16,7 +16,7 @@ public class Timer : MonoBehaviour
 		}
         if(time <= 0)
         {
-            Debug.Log("PERDU T'ES LENT");
+            
         }
     }
 }

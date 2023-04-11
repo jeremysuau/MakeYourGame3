@@ -5,9 +5,11 @@ public class CoinSound : MonoBehaviour
 	public AudioClip sound;
 	public AudioSource source;
 
-	private void OnTriggerEnter()
+	private void OnTriggerEnter(Collider col)
 	{
-		source.PlayOneShot(sound);
-		Debug.Log("PlayCoinSound");
+		if (col.transform.tag == "Player")
+		{
+			source.PlayOneShot(sound);
+		}
 	}
 }

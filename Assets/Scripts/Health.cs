@@ -6,26 +6,39 @@ public class Health : MonoBehaviour
     public int health;
     public int maxHealth;
 	public Slider healthSlider;
+	public Animator anim;
+
+	public AudioClip[] hits;
+	public AudioSource hitSource;
 
 	private void Start()
 	{
-		health = maxHealth;
-		healthSlider.maxValue = maxHealth;
-		healthSlider.value = maxHealth;
+		Set();
 	}
 
 	public void TheDeathOfThePlayer()
     {
-        Debug.Log("PERDU T'ES MORT");
-    }
+        transform.position = new Vector3(0f,12.5f,0f);
+		Set();
+	}
 
 	public void Hit()
 	{
-        health -= 1;
+		anim.Play("Hit");
+		health -= 1;
 		healthSlider.value = health;
         if (health <= 0)
         {
             TheDeathOfThePlayer();
 		}
+		int rng = Random.Range(0, hits.Length);
+		hitSource.PlayOneShot(hits[rng]);
+	}
+
+	private void Set()
+	{
+		health = maxHealth;
+		healthSlider.maxValue = maxHealth;
+		healthSlider.value = maxHealth;
 	}
 }

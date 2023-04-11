@@ -11,7 +11,7 @@ public class Coins : MonoBehaviour
 	private Collider col;
 
 	public int value;
-    public Score coinsValue;
+    private Score coinsValue;
 
 
 	private void Start()
@@ -19,6 +19,7 @@ public class Coins : MonoBehaviour
         startPosition = transform.position;
 		renderer = GetComponent<MeshRenderer>();
 		col = GetComponent<SphereCollider>();
+		coinsValue = FindObjectOfType<Score>();
 	}
 
 	void Update()
