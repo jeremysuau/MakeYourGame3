@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Spawn
   - Enemy
+  - GameManager
+  - Boss
+  - Piece
   layers:
   - Default
   - TransparentFX

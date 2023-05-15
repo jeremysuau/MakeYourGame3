@@ -12,9 +12,11 @@ GameObject:
   - component: {fileID: 8222728274455074686}
   - component: {fileID: 8222728274455074684}
   - component: {fileID: 8222728274455074683}
+  - component: {fileID: 1119358312}
+  - component: {fileID: 241699329}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -70,5 +72,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bbf6f87ebbc62b4395acecc63aa5872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Coins: {fileID: 0}
+  coinsText: {fileID: 0}
+  killsText: {fileID: 0}
   coins: 0
+  kills: 0
+--- !u!114 &1119358312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8222728274455074687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bcec6536c3bd9244a8559278abbe51e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 1
+  time: 60
+  timertext: {fileID: 0}
+--- !u!114 &241699329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8222728274455074687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a72de0954ffa5145b24c4341d4f2462, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelGameOver: {fileID: 0}

@@ -1,15 +1,25 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-	private PlayerInputs playerInputs;
 	private Rigidbody rb;
+	public Collider col;
+	public PhysicMaterial groundMat;
+	public PhysicMaterial midAirMat;
 	private Footstep footstep;
+	public Animator playerAnimator;
+	private PlayerInputActions playerInputActions;
 
+	public float inputX;
+	public float inputY;
+	private Vector3 direction;
+	private Vector3 moveDir;
 	public float speedMouvement;
 	public float jumpForce;
 	public bool grounded;
+	public bool isTakingDamage;
 
 	private Transform cam;
 	private float turnSmoothVelocity;
@@ -19,9 +29,23 @@ public class PlayerController : MonoBehaviour
 	private void Awake()
 	{
 		cam = Camera.main.transform;
-		playerInputs = GetComponent<PlayerInputs>();
 		rb = GetComponent<Rigidbody>();
 		footstep = GetComponent<Footstep>();
+
+		playerInputActions = new PlayerInputActions();
+		playerInputActions.Player.Enable();
+		playerInputActions.Player.Jump.performed += Jump;
+		playerInputActions.Player.Move.performed += Move;
+		playerInputActions.Player.Move.canceled += StopMove;
+	}
+
+	private void Jump(InputAction.CallbackContext obj)
+	{
+		//verifie l'input et le fait qu'on soit au sol
+		if (true && grounded)
+		{
+			rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+		}
 	}
 
 	private void FixedUpdate()
@@ -31,46 +55,48 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
-		Jump();
+		inputX = playerInputActions.Player.Move.ReadValue<Vector2>().x;
+		inputY = playerInputActions.Player.Move.ReadValue<Vector2>().y;
 
-		Mouvement();
-	}
-
-	//gestion des mouvement lateraux du joueur
-	public void Mouvement()
-	{
-		//recupere les valeurs d'input via PlayerInputs
-		float inputX = playerInputs.inputX;
-		float inputY = playerInputs.inputY;
-
-		//defini la direction de deplacement grace aux inputs
-		Vector3 direction = new Vector3(inputX, 0f, inputY).normalized;
-
-		if (direction.magnitude >= 0.1f)
+		if(inputX != 0 || inputY != 0)
 		{
+			//defini la direction de deplacement grace aux inputs
+			direction = new Vector3(inputX, 0f, inputY).normalized;
+
 			//oriente correctement le joueur suivant son deplacement
 			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
 			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothtime);
 			transform.rotation = Quaternion.Euler(0f, angle, 0f);
-			Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+			moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
 			//applique le mouvement
 			rb.velocity = new Vector3(moveDir.x * speedMouvement, rb.velocity.y, moveDir.z * speedMouvement);
 		}
 		else
 		{
-			//frein
-			rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+			if (grounded)
+			{
+				rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+			}
 		}
+
+		//ANIMATION
+		playerAnimator.SetFloat("Speed", Mathf.Abs(inputX) + Mathf.Abs(inputY));
+		playerAnimator.SetBool("Grounded", grounded);
+
 	}
 
-	//systeme de saut
-	public void Jump()
+	//gestion des mouvement lateraux du joueur
+	public void Move(InputAction.CallbackContext obj)
 	{
-		//verifie l'input et le fait qu'on soit au sol
-		if (playerInputs.inputJump == true && grounded)
+		
+	}
+
+	public void StopMove(InputAction.CallbackContext obj)
+	{
+		if (grounded)
 		{
-			rb.AddForce(transform.up * jumpForce,ForceMode.Impulse);
+			rb.velocity = Vector3.zero;
 		}
 	}
 
@@ -78,6 +104,14 @@ public class PlayerController : MonoBehaviour
 	public void IsGrounded()
 	{
 		grounded = Physics.CheckSphere(transform.position, 0.1f, groundedLayerMask);
+		if (grounded)
+		{
+			col.material = groundMat;
+		}
+		else 
+		{
+			col.material = midAirMat;
+		}
 	}
 
 	private void OnDrawGizmos()
@@ -85,4 +119,10 @@ public class PlayerController : MonoBehaviour
 		Gizmos.color = Color.red;
 		Gizmos.DrawSphere(transform.position, 0.1f);  
 	}
-} 
+
+	public IEnumerator TakingDamage() 
+	{ 
+		yield return new WaitForSeconds(0.25f);
+		isTakingDamage = false;
+	}
+}

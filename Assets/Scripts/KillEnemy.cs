@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class KillEnemy : MonoBehaviour
 {
-    public LayerMask enemyLayer;
-
-	private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider col)
 	{
-		Kill(other);
-	}
-
-	public void Kill(Collider other)
-    {
-		if (other.gameObject.CompareTag("Enemy"))
+		if (col.gameObject.CompareTag("Boss"))
 		{
-			other.GetComponentInParent<Gumpa>().Die();
+			transform.GetComponentInParent<Rigidbody>().AddForce(1200f * transform.up, ForceMode.Impulse);
+			col.GetComponentInParent<Boss>().Die();
+
+		}else if (col.gameObject.CompareTag("Enemy"))
+		{
+			transform.GetComponentInParent<Rigidbody>().AddForce(500f * transform.up, ForceMode.Impulse);
+			col.GetComponentInParent<Gumpa>().Die();
 		}
 	}
 }

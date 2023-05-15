@@ -1,12 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Health : MonoBehaviour
 {
     public int health;
     public int maxHealth;
+    public float lerpHealth;
 	public Slider healthSlider;
+	public Slider lerpHealthSlider;
+	public GameObject manager;
+
+	public Rigidbody playerRb;
+
 	public Animator anim;
+	public Animator animPlayer;
 
 	public AudioClip[] hits;
 	public AudioSource hitSource;
@@ -16,20 +24,21 @@ public class Health : MonoBehaviour
 		Set();
 	}
 
-	public void TheDeathOfThePlayer()
-    {
-        transform.position = new Vector3(0f,12.5f,0f);
-		Set();
+	private void Update()
+	{
+		lerpHealth = Mathf.Lerp(lerpHealth, health, 0.1f);
+		lerpHealthSlider.value = lerpHealth;
 	}
 
-	public void Hit()
+	public void Hit(int value)
 	{
 		anim.Play("Hit");
-		health -= 1;
+		health -= value;
 		healthSlider.value = health;
         if (health <= 0)
         {
-            TheDeathOfThePlayer();
+            manager.GetComponent<GameOver>().EndofGame();
+			animPlayer.enabled = false;
 		}
 		int rng = Random.Range(0, hits.Length);
 		hitSource.PlayOneShot(hits[rng]);
@@ -37,8 +46,12 @@ public class Health : MonoBehaviour
 
 	private void Set()
 	{
+		animPlayer.enabled = true;
 		health = maxHealth;
+		lerpHealth = maxHealth;
 		healthSlider.maxValue = maxHealth;
+		lerpHealthSlider.maxValue = maxHealth;
 		healthSlider.value = maxHealth;
+		lerpHealthSlider.value = maxHealth;
 	}
 }
