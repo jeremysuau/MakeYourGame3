@@ -12,16 +12,16 @@ public class LightCycle : MonoBehaviour
     private float targetRotX;
     private float cooldownBlink = 0.1f;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         player = FindObjectOfType<PlayerController>().transform;
     }
 
-    // Update is called once per frame
     void Update()
     {
         DayCycle();
+        //permet de creer un clignotement d'une des 4 light du top
         if (cooldownBlink <= 0)
         {
 			pointLight[0].intensity = UnityEngine.Random.Range(0, 100);
@@ -35,6 +35,7 @@ public class LightCycle : MonoBehaviour
 
     private void DayCycle()
     {
+        //modifie les valeur de la light pour passer du jour a la nuit
         playerHeight = player.transform.position.y;
         targetRotX = math.remap(0, 90, 50, -50, playerHeight);
         colorTemp = math.remap(0, 90, 5000, 1500, playerHeight);

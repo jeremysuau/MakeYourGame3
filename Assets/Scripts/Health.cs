@@ -26,12 +26,14 @@ public class Health : MonoBehaviour
 
 	private void Update()
 	{
+		//fais en sorte que la barre de vie descende plus doucement
 		lerpHealth = Mathf.Lerp(lerpHealth, health, 0.1f);
 		lerpHealthSlider.value = lerpHealth;
 	}
 
 	public void Hit(int value)
 	{
+		//met l'ecran en rouge
 		anim.Play("Hit");
 		health -= value;
 		healthSlider.value = health;

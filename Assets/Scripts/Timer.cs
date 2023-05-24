@@ -13,6 +13,7 @@ public class Timer : MonoBehaviour
         if (isActive)
         {
 			time -= Time.deltaTime;
+            //formate le temps afficher en haut de l'ecran
             timertext.text = string.Format("{0:0}:{1:00}", Mathf.Floor(time / 60), time % 60);
 			PlayerPrefs.SetFloat("TimeValue", time);
 		}

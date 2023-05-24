@@ -29,7 +29,6 @@ public class Boss : MonoBehaviour
 			score.GetComponent<Score>().AddKill();
 			Destroy(gameObject, 1);
 			LevelFinish();
-			//StartCoroutine(Finish()); 
 		}
 	}
 
@@ -38,16 +37,4 @@ public class Boss : MonoBehaviour
 		SceneManager.LoadScene("FinalScene");
 	}
 
-	IEnumerator Finish()
-	{
-		yield return new WaitForSeconds(2f);
-
-		AsyncOperation operation = SceneManager.LoadSceneAsync("FinalScene");
-
-		while (!operation.isDone)
-		{
-			yield return null; 
-		}
-	}
-	
 }

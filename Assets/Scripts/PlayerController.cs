@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 		footstep = GetComponent<Footstep>();
 
+		//permet d'activer des input
 		playerInputActions = new PlayerInputActions();
 		playerInputActions.Player.Enable();
 		playerInputActions.Player.Jump.performed += Jump;

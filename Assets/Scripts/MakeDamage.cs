@@ -17,10 +17,12 @@ public class MakeDamage : MonoBehaviour
 			if(!isLava)
 			{
 				Debug.Log(collision.gameObject.name);
+				//creer un jump pour cause de collision avec un enemi
 				collision.gameObject.GetComponent<Rigidbody>().AddForce(800f * transform.forward,ForceMode.Impulse);
 			}
 			else
 			{
+				//creer un jump pour cause de collision avec la lave
 				collision.gameObject.GetComponent<Rigidbody>().AddForce(1f * transform.up, ForceMode.Impulse);
 			}
 			StartCoroutine(playerController.TakingDamage());
